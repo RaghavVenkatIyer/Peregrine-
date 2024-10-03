@@ -1,4 +1,61 @@
-<html>
-<title>Website On Conservation Of Peregrine Falcon</title>
-<h1>Peregrine Falcon </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google reCAPTCHA Client-Side Example</title>
+    <!-- Load reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Load recaptcha library -->
+    <script src="https://cdn.jsdelivr.net/npm/recaptcha@2.0.0/dist/recaptcha.min.js"></script>
+</head>
+<body>
+    <h1>Google reCAPTCHA Client-Side Example</h1>
+   
+    <!-- Simple form -->
+    <form id="myForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required><br><br>
+       
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+       
+        <!-- Google reCAPTCHA widget -->
+        <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div><br>
+       
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            // Get reCAPTCHA response token
+            var recaptchaResponse = grecaptcha.getResponse();
+
+            if (recaptchaResponse.length === 0) {
+                // User hasn't completed the reCAPTCHA
+                document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
+            } else {
+                // reCAPTCHA was completed successfully
+                var formData = new FormData();
+                formData.append('name', document.getElementById('name').value);
+                formData.append('email', document.getElementById('email').value);
+                formData.append('recaptchaToken', recaptchaResponse);
+
+                // Verify reCAPTCHA token using recaptcha library
+                recaptcha.verify(formData, '6LfSrlYqAAAAAIZQgg8wBRDjoJ7d2oN1nuWT-kXI', function(err, data) {
+                    if (err) {
+                        document.getElementById('result').innerText = "reCAPTCHA verification failed!";
+                    } else {
+                        document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+                    }
+                });
+            }
+        });
+    </script>
+</body>
 </html>
