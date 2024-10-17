@@ -264,36 +264,49 @@
             content.classList.remove('reveal');
           }
         });
+ <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    const API_KEY = "AIzaSyAKXi46TKHR6Ds-fIm3VUQVL2ZuEe8QcJY";
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
-        function createBotMessageDiv(message) {
-          const div = document.createElement("div");
-          div.className = "message bot-message";
-          div.textContent = `Bot: ${message}`;
-          return div;
-        }
+    document.querySelector('.btn').addEventListener('click', run);
 
-        function createUserMessageDiv(message) {
-          const div = document.createElement("div");
-          div.className = "message user-message";
-          div.textContent = `You: ${message}`;
-          return div;
-        }
+    async function run() {
+      try {
+        const userInput = document.getElementById("userprompt").value;
+        if (userInput.trim() === "") return;
 
-        document.querySelector(".btn").addEventListener("click", () => {
-          const userInput = document.querySelector("#userprompt").value;
-          if (userInput) {
-            document.querySelector("#chat-container").appendChild(createUserMessageDiv(userInput));
+        const userMessageDiv = createUserMessageDiv(userInput);
+        document.querySelector('.chat-history').appendChild(userMessageDiv);
 
-            // Simulated bot response
-            const botResponse = "This is a simulated response to: " + userInput; // Replace with your bot logic
-            setTimeout(() => {
-              document.querySelector("#chat-container").appendChild(createBotMessageDiv(botResponse));
-              document.querySelector("#chat-container").scrollTop = document.querySelector("#chat-container").scrollHeight; // Auto scroll
-            }, 500);
+        const botMessageDiv = createBotMessageDiv("Thinking...");
+        document.querySelector('.chat-history').appendChild(botMessageDiv);
 
-            document.querySelector("#userprompt").value = ""; // Clear input
-          }
-        });
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const result = await model.generateContent(userInput);
+        const text = extractTextFromResponse(result.response);
+
+        const newBotMessageDiv = createBotMessageDiv(text);
+        document.querySelector('.chat-history').appendChild(newBotMessageDiv);
+      } catch (err) {
+        alert(err);
+      }
+    }
+
+    function extractTextFromResponse(response) {
+      if (response.candidates && response.candidates.length > 0) {
+        return response.candidates[0].content.parts.map(part => part.text || '').join('');
+      }
+      return "No valid response from AI";
+    }
+  </script>
       </script>
     </div>
   </div>
