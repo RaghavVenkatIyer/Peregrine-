@@ -1,61 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google reCAPTCHA Client-Side Example</title>
-    <!-- Load reCAPTCHA API -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <!-- Load recaptcha library -->
-    <script src="https://cdn.jsdelivr.net/npm/recaptcha@2.0.0/dist/recaptcha.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peregrine Falcon Discussion</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* Prevent body scrolling */
+    }
+
+    .zoom-container {
+      position: relative;
+      height: 100vh;
+      overflow: hidden; /* Prevent scrolling of zoom container */
+    }
+
+    .zoom-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+      z-index: 1000;
+    }
+
+    .zoom-image.zoomed {
+      transform: scale(1.2);
+      opacity: 0.5;
+      pointer-events: none; /* Disable interaction with zoomed image */
+    }
+
+    .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .content.reveal {
+      opacity: 1;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 1001;
+    }
+
+    .scroll-hint-icon {
+      margin-bottom: 10px;
+    }
+
+    .scroll-hint-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: #fff;
+      animation: scroll-hint-icon 2s infinite;
+    }
+
+    @keyframes scroll-hint-icon {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-hint-text {
+      font-size: 14px;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .button-container {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1002;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .recaptcha-container {
+      position: absolute;
+      bottom: 20px;
+      left: 20px; 
+      z-index: 1003;
+      text-align: center;
+    }
+
+    #result {
+      margin-top: 10px;
+      color: red;
+    }
+
+    .chatbot-container {
+      position: absolute;
+      bottom: 120px; /* Adjusted to avoid overlap with reCAPTCHA */
+      left: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .user-message {
+      color: #333;
+      background-color: #efb505;
+    }
+
+    .bot-message {
+      color: #a69258;
+      background-color: #736151;
+    }
+
+    #chat-container {
+      width: 100%; /* Updated to fill the container */
+      max-height: 200px; /* Limited height for scroll */
+      border: 1px solid #63be77;
+      padding: 5px;
+      overflow-y: auto;
+      background-color: #bfae99;
+    }
+
+    .chat-history {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .user-input-div {
+      margin-top: 10px;
+      display: flex; /* Flexbox to align input and button */
+      gap: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Google reCAPTCHA Client-Side Example</h1>
-   
-    <!-- Simple form -->
-    <form id="myForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required><br><br>
-       
-        <label for="email">Email:</label>
-        <input type="email" id="email" required><br><br>
-       
-        <!-- Google reCAPTCHA widget -->
-        <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div><br>
-       
-        <button type="submit">Submit</button>
-    </form>
+  <div class="zoom-container">
+    <img src="file:///Users/raghavvenkatiyer/Desktop/peregrinefalcon.jpeg" alt="Your Image" class="zoom-image">
+    <div class="scroll-hint">
+      <div class="scroll-hint-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="scroll-hint-text">Scroll Down To Enter The World Of Peregrine Falcon</div>
+    </div>
+    <div class="content">
+      <div class="button-container">
+        <button onclick="window.location.href='file:///Users/raghavvenkatiyer/Desktop/Peregrine%20Falcon%20Website%20Code/Page%202%20.html';">Visit Page 2</button>
+        <button onclick="window.location.href='file:///Users/raghavvenkatiyer/Desktop/Peregrine%20Falcon%20Website%20Code/Page%203.html';">Visit Page 3 </button>
+      </div>
+      
+      <div class="chatbot-container">
+        <div id="chat-container" class="chat-history"></div>
+        <div class="user-input-div">
+          <input type="text" placeholder="Chat with a bot in case of more queries" class="user-input" id="userprompt"/>
+          <button class="btn">Go</button>
+        </div>
+      </div>
 
-    <div id="result"></div>
+      <div class="recaptcha-container">
+        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div><br>
+        <div id="result"></div>
+      </div>
 
-    <script>
-        // Handle form submission
-        document.getElementById('myForm').addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent default form submission
+      <div id="disqus_thread"></div>
+      <script>
+      
+        var disqus_config = function () {
+          this.page.url = file:///Users/raghavvenkatiyer/Desktop/Peregrine%20Falcon%20Website%20Code/Peregrine%20Falcon%20Code.html;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = Home Page; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        
+        (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://conservation-of-peregrine-falcon.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </div>
 
-            // Get reCAPTCHA response token
-            var recaptchaResponse = grecaptcha.getResponse();
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    // Handle button clicks
+    document.addEventListener('click', function(event) {
+      if (event.target.tagName === 'BUTTON') {
+        event.preventDefault();  // Prevent default form submission
 
-            if (recaptchaResponse.length === 0) {
-                // User hasn't completed the reCAPTCHA
-                document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
-            } else {
-                // reCAPTCHA was completed successfully
-                var formData = new FormData();
-                formData.append('name', document.getElementById('name').value);
-                formData.append('email', document.getElementById('email').value);
-                formData.append('recaptchaToken', recaptchaResponse);
+        // Get reCAPTCHA response token
+        var recaptchaResponse = grecaptcha.getResponse();
 
-                // Verify reCAPTCHA token using recaptcha library
-                recaptcha.verify(formData, '6LfSrlYqAAAAAIZQgg8wBRDjoJ7d2oN1nuWT-kXI', function(err, data) {
-                    if (err) {
-                        document.getElementById('result').innerText = "reCAPTCHA verification failed!";
-                    } else {
-                        document.getElementById('result').innerText = "reCAPTCHA verification successful!";
-                    }
-                });
-            }
-        });
-    </script>
+        if (recaptchaResponse.length === 0) {
+          document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
+        } else {
+          var formData = new FormData();
+          formData.append('recaptchaToken', recaptchaResponse);
+          document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+        }
+      }
+    });
+
+    const zoomImage = document.querySelector('.zoom-image');
+    const content = document.querySelector('.content');
+    const zoomContainer = document.querySelector('.zoom-container');
+
+    zoomContainer.addEventListener('wheel', (event) => {
+      if (event.deltaY > 0) {
+        zoomImage.classList.add('zoomed');
+        content.classList.add('reveal');
+      } else {
+        zoomImage.classList.remove('zoomed');
+        content.classList.remove('reveal');
+      }
+    });
+
+    function createBotMessageDiv(message) {
+      const div = document.createElement("div");
+      div.className = "message bot-message";
+      div.textContent = `Bot: ${message}`;
+      return div;
+    }
+
+    function createUserMessageDiv(message) {
+      const div = document.createElement("div");
+      div.className = "message user-message";
+      div.textContent = `You: ${message}`;
+      return div;
+    }
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    const API_KEY = "AIzaSyAKXi46TKHR6Ds-fIm3VUQVL2ZuEe8QcJY";
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    document.querySelector('.btn').addEventListener('click', run);
+
+    async function run() {
+      try {
+        const userInput = document.getElementById("userprompt").value;
+        if (userInput.trim() === "") return;
+
+        const userMessageDiv = createUserMessageDiv(userInput);
+        document.querySelector('.chat-history').appendChild(userMessageDiv);
+
+        const botMessageDiv = createBotMessageDiv("Thinking...");
+        document.querySelector('.chat-history').appendChild(botMessageDiv);
+
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const result = await model.generateContent(userInput);
+        const text = extractTextFromResponse(result.response);
+
+        const newBotMessageDiv = createBotMessageDiv(text);
+        document.querySelector('.chat-history').appendChild(newBotMessageDiv);
+      } catch (err) {
+        alert(err);
+      }
+    }
+
+    function extractTextFromResponse(response) {
+      if (response.candidates && response.candidates.length > 0) {
+        return response.candidates[0].content.parts.map(part => part.text || '').join('');
+      }
+      return "No valid response from AI";
+    }
+  </script>
+  <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon.disqus.com/count.js" async></script>
 </body>
 </html>
