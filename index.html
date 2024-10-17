@@ -276,24 +276,26 @@
           const div = document.createElement("div");
           div.className = "message user-message";
           div.textContent = `You: ${message}`;
-
-        return div;
-      }
-
-      document.querySelector('.btn').addEventListener('click', function() {
-        const userInput = document.getElementById('userprompt').value;
-        if (userInput) {
-          const chatContainer = document.getElementById('chat-container');
-          chatContainer.appendChild(createUserMessageDiv(userInput));
-          // Simulate a bot response (replace with actual logic)
-          setTimeout(() => {
-            chatContainer.appendChild(createBotMessageDiv("This is a simulated response."));
-          }, 1000);
-          document.getElementById('userprompt').value = ""; // Clear the input
+          return div;
         }
-      });
-    </script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+        document.querySelector(".btn").addEventListener("click", () => {
+          const userInput = document.querySelector("#userprompt").value;
+          if (userInput) {
+            document.querySelector("#chat-container").appendChild(createUserMessageDiv(userInput));
+
+            // Simulated bot response
+            const botResponse = "This is a simulated response to: " + userInput; // Replace with your bot logic
+            setTimeout(() => {
+              document.querySelector("#chat-container").appendChild(createBotMessageDiv(botResponse));
+              document.querySelector("#chat-container").scrollTop = document.querySelector("#chat-container").scrollHeight; // Auto scroll
+            }, 500);
+
+            document.querySelector("#userprompt").value = ""; // Clear input
+          }
+        });
+      </script>
+    </div>
   </div>
 </body>
 </html>
