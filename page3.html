@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 3</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f7fa; /* Light cyan background */
+            color: #212121; /* Dark grey text */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #00796b; /* Teal color */
+            animation: fadeIn 1s ease-in;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff; /* White background */
+            border: 2px solid #00796b; /* Teal border */
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: slideIn 1s forwards;
+            animation-delay: 0.5s;
+        }
+
+        .animation-bar {
+            width: 100%;
+            height: 25px; /* Slightly taller bar */
+            background-color: #ffab40; /* Orange color */
+            animation: loading 4s infinite;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            color: white;
+            background-color: #00796b; /* Teal color */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 0 10px; /* Space between buttons */
+            animation: bounce 1s infinite alternate;
+        }
+
+        button:hover {
+            background-color: #004d40; /* Darker shade on hover */
+            transform: scale(1.05); /* Scale up on hover */
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        img {
+            max-width: 100%; /* Responsive images */
+            border-radius: 12px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+            animation-delay: 2s; /* Delay for image fade-in */
+        }
+
+        li {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Apply delay to each list item for staggered effect */
+        li:nth-child(1) { animation-delay: 0.6s; }
+        li:nth-child(2) { animation-delay: 0.8s; }
+        li:nth-child(3) { animation-delay: 1s; }
+        li:nth-child(4) { animation-delay: 1.2s; }
+        li:nth-child(5) { animation-delay: 1.4s; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Page 3</h1>
+    <div class="content">
+        <div class="animation-bar"></div>
+        <p>This page covers various interesting topics:</p>
+        <ul>
+            <li>Understanding biodiversity and its importance.</li>
+            <li>The impact of climate change on wildlife.</li>
+            <li>Conservation efforts around the globe.</li>
+            <li>How humans can contribute to environmental protection.</li>
+            <li>Future trends in wildlife conservation.</li>
+        </ul>
+        <img src="YOUR_IMAGE_URL_HERE.jpg" alt="Wildlife Conservation" />
+        <div class="button-container">
+            <button onclick="window.location.href='file:///Users/raghavvenkatiyer/Desktop/Peregrine%20Falcon%20Website%20Code/Peregrine%20Falcon%20Code.html';">Back to Main Page</button>
+            <button onclick="window.location.href='file:///Users/raghavvenkatiyer/Desktop/Peregrine%20Falcon%20Website%20Code/Page%202%20.html';">Go to Page 2 </button>
+        </div>
+    </div>
+</body>
+</html>
