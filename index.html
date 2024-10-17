@@ -7,7 +7,6 @@
     body {
       margin: 0;
       overflow: hidden; /* Prevent body scrolling */
-      font-family: Arial, sans-serif; /* Set a default font */
     }
 
     .zoom-container {
@@ -118,7 +117,7 @@
 
     .recaptcha-container {
       position: absolute;
-      bottom: 20px;
+      bottom: 20px; 
       left: 20px; 
       z-index: 1003;
       text-align: center;
@@ -176,12 +175,11 @@
       gap: 10px;
     }
 
-    /* Styles for Disqus Thread */
+    /* Added styles for Disqus */
     #disqus_thread {
-      margin: 20px 0; /* Adjusts margin around the Disqus thread */
-      border: none; /* Ensures there is no border */
-      padding: 0; /* Resets padding */
-      overflow: hidden; /* Prevents overflow issues */
+      width: 100%;
+      margin-top: 20px;
+      z-index: 1000; /* Ensure it's above other content */
     }
   </style>
 </head>
@@ -199,7 +197,7 @@
     <div class="content">
       <div class="button-container">
         <button onclick="window.location.href='page2.html';">Visit Page 2</button>
-        <button onclick="window.location.href='page3.html';">Visit Page 3</button>
+        <button onclick="window.location.href='page3.html';">Visit Page 3 </button>
       </div>
       
       <div class="chatbot-container">
@@ -211,74 +209,74 @@
       </div>
       
       <div class="recaptcha-container">
-        <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div>
+        <!-- Google reCAPTCHA widget -->
+        <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div><br>
         <button type="submit">Submit</button>
+        <div id="result"></div>
       </div>
 
-      <div id="result"></div>
-    </div>
+      <div id="disqus_thread"></div>  
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https://raghavvenkatiyer.github.io/Peregrine-/'; // Your page URL
+          this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; // Unique identifier for this page
+        };
 
-    <div id="disqus_thread"></div>  
-    <script>
-      var disqus_config = function () {
-        this.page.url = 'https://raghavvenkatiyer.github.io/Peregrine-/'; // Your page URL
-        this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; // Unique identifier for this page
-      };
+        (function() { // DON'T EDIT BELOW THIS LINE
+          var d = document, s = d.createElement('script');
+          s.src = 'https://conservation-of-peregrine-falcon-pesticide.disqus.com/embed.js'; // Correct shortname here
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon-pesticide.disqus.com/count.js" async></script>
+      
+      <script>
+        // Handle button clicks
+        document.addEventListener('click', function(event) {
+          if (event.target.tagName === 'BUTTON') {
+            event.preventDefault();  // Prevent default form submission
 
-      (function() { // DON'T EDIT BELOW THIS LINE
-        var d = document, s = d.createElement('script');
-        s.src = 'https://conservation-of-peregrine-falcon-pesticide.disqus.com/embed.js'; // Correct shortname here
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon-pesticide.disqus.com/count.js" async></script>
-    
-    <script>
-      // Handle button clicks
-      document.addEventListener('click', function(event) {
-        if (event.target.tagName === 'BUTTON') {
-          event.preventDefault();  // Prevent default form submission
+            // Get reCAPTCHA response token
+            var recaptchaResponse = grecaptcha.getResponse();
 
-          // Get reCAPTCHA response token
-          var recaptchaResponse = grecaptcha.getResponse();
-
-          if (recaptchaResponse.length === 0) {
-            document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
-          } else {
-            var formData = new FormData();
-            formData.append('recaptchaToken', recaptchaResponse);
-            document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+            if (recaptchaResponse.length === 0) {
+              document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
+            } else {
+              var formData = new FormData();
+              formData.append('recaptchaToken', recaptchaResponse);
+              document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+            }
           }
+        });
+
+        const zoomImage = document.querySelector('.zoom-image');
+        const content = document.querySelector('.content');
+        const zoomContainer = document.querySelector('.zoom-container');
+
+        zoomContainer.addEventListener('wheel', (event) => {
+          if (event.deltaY > 0) {
+            zoomImage.classList.add('zoomed');
+            content.classList.add('reveal');
+          } else {
+            zoomImage.classList.remove('zoomed');
+            content.classList.remove('reveal');
+          }
+        });
+
+        function createBotMessageDiv(message) {
+          const div = document.createElement("div");
+          div.className = "message bot-message";
+          div.textContent = `Bot: ${message}`;
+          return div;
         }
-      });
 
-      const zoomImage = document.querySelector('.zoom-image');
-      const content = document.querySelector('.content');
-      const zoomContainer = document.querySelector('.zoom-container');
+        function createUserMessageDiv(message) {
+          const div = document.createElement("div");
+          div.className = "message user-message";
+          div.textContent = `You: ${message}`;
 
-      zoomContainer.addEventListener('wheel', (event) => {
-        if (event.deltaY > 0) {
-          zoomImage.classList.add('zoomed');
-          content.classList.add('reveal');
-        } else {
-          zoomImage.classList.remove('zoomed');
-          content.classList.remove('reveal');
-        }
-      });
-
-      function createBotMessageDiv(message) {
-        const div = document.createElement("div");
-        div.className = "message bot-message";
-        div.textContent = `Bot: ${message}`;
-        return div;
-      }
-
-      function createUserMessageDiv(message) {
-        const div = document.createElement("div");
-        div.className = "message user-message";
-        div.textContent = `You: ${message}`;
         return div;
       }
 
