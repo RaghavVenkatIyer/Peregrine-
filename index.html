@@ -6,7 +6,8 @@
   <style>
     body {
       margin: 0;
-      overflow-x: hidden; /* Prevent horizontal scrolling */
+      overflow: hidden; /* Prevent body scrolling */
+      font-family: Arial, sans-serif; /* Set a default font */
     }
 
     .zoom-container {
@@ -24,6 +25,12 @@
       object-fit: cover;
       transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
       z-index: 1000;
+    }
+
+    .zoom-image.zoomed {
+      transform: scale(1.2);
+      opacity: 0.5;
+      pointer-events: none; /* Disable interaction with zoomed image */
     }
 
     .content {
@@ -111,7 +118,7 @@
 
     .recaptcha-container {
       position: absolute;
-      bottom: 20px; 
+      bottom: 20px;
       left: 20px; 
       z-index: 1003;
       text-align: center;
@@ -169,11 +176,13 @@
       gap: 10px;
     }
 
-    /* Added styles for Disqus */
+    /* Styles for Disqus Thread */
     #disqus_thread {
-      width: 100%;
-      margin-top: 20px;
-      z-index: 1000; /* Ensure it's above other content */
+      max-height: 350px;
+      margin: 20px 0; /* Adjusts margin around the Disqus thread */
+      border: none; /* Ensures there is no border */
+      padding: 0; /* Resets padding */
+      overflow: hidden; /* Prevents overflow issues */
     }
   </style>
 </head>
@@ -191,128 +200,103 @@
     <div class="content">
       <div class="button-container">
         <button onclick="window.location.href='page2.html';">Visit Page 2</button>
-        <button onclick="window.location.href='page3.html';">Visit Page 3 </button>
+        <button onclick="window.location.href='page3.html';">Visit Page 3</button>
       </div>
       
-      <body style="background-color: #f2c029;">
-    <main>
-      <h1>Simple reCAPTCHA and ChatBot Demo</h1>
-      <form action="?" method="POST">
-        <div class="g-recaptcha" data-sitekey="6LdaDUkqAAAAAHMmt2NSwD4x07FQOpNGiwpGtVHK"></div>
-        <br />
-        <input type="submit" value="Submit">
-      </form>
-      
-      <!-- Chatbot UI -->
-      <div id="chat-container" class="chat-history"></div>
-      <div class="user-input-div">
-        <input type="text" placeholder="Chat With Your Bot" class="user-input" id="userprompt"/>
-        <button class="btn">Go</button>
+      <div class="chatbot-container">
+        <div id="chat-container" class="chat-history"></div>
+        <div class="user-input-div">
+          <input type="text" placeholder="Chat with a bot in case of more queries" class="user-input" id="userprompt"/>
+          <button class="btn">Go</button>
+        </div>
       </div>
-    </main>
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
-      }
+      
+      <div class="recaptcha-container">
+        <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div>
+        <button type="submit">Submit</button>
+      </div>
+
+      <div id="result"></div>
+    </div>
+
+    <div id="disqus_thread"></div>  
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://raghavvenkatiyer.github.io/Peregrine-/'; // Your page URL
+        this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; // Unique identifier for this page
+      };
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://conservation-of-peregrine-falcon-pesticide.disqus.com/embed.js'; // Correct shortname here
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
     </script>
-    <script type="module">
-      import { GoogleGenerativeAI } from "@google/generative-ai";
-      const API_KEY = "AIzaSyAKXi46TKHR6Ds-fIm3VUQVL2ZuEe8QcJY";
-      const genAI = new GoogleGenerativeAI(API_KEY);
-  
-      document.querySelector('.btn').addEventListener('click', run);
-  
-      async function run() {
-        try {
-          const userInput = document.getElementById("userprompt").value;
-          if (userInput.trim() === "") return;
-  
-          const userMessageDiv = createUserMessageDiv(userInput);
-          document.querySelector('.chat-history').appendChild(userMessageDiv);
-  
-          const botMessageDiv = createBotMessageDiv("Thinking...");
-          document.querySelector('.chat-history').appendChild(botMessageDiv);
-  
-          const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-          const result = await model.generateContent(userInput);
-          const text = extractTextFromResponse(result.response);
-  
-          const newBotMessageDiv = createBotMessageDiv(text);
-          document.querySelector('.chat-history').appendChild(newBotMessageDiv);
-        } catch (err) {
-          alert(err);
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon-pesticide.disqus.com/count.js" async></script>
+    
+    <script>
+      // Handle button clicks
+      document.addEventListener('click', function(event) {
+        if (event.target.tagName === 'BUTTON') {
+          event.preventDefault();  // Prevent default form submission
+
+          // Get reCAPTCHA response token
+          var recaptchaResponse = grecaptcha.getResponse();
+
+          if (recaptchaResponse.length === 0) {
+            document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
+          } else {
+            var formData = new FormData();
+            formData.append('recaptchaToken', recaptchaResponse);
+            document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+          }
         }
-      }
-  
-      function extractTextFromResponse(response) {
-        if (response.candidates && response.candidates.length > 0) {
-          return response.candidates[0].content.parts.map(part => part.text || '').join('');
+      });
+
+      const zoomImage = document.querySelector('.zoom-image');
+      const content = document.querySelector('.content');
+      const zoomContainer = document.querySelector('.zoom-container');
+
+      zoomContainer.addEventListener('wheel', (event) => {
+        if (event.deltaY > 0) {
+          zoomImage.classList.add('zoomed');
+          content.classList.add('reveal');
+        } else {
+          zoomImage.classList.remove('zoomed');
+          content.classList.remove('reveal');
         }
-        return "No valid response from AI";
-      }
-  
-      function createUserMessageDiv(message) {
-        const div = document.createElement("div");
-        div.className = "message user-message";
-        div.textContent = `User: ${message}`;
-        return div;
-      }
-  
+      });
+
       function createBotMessageDiv(message) {
         const div = document.createElement("div");
         div.className = "message bot-message";
         div.textContent = `Bot: ${message}`;
         return div;
       }
-    </script>
-     <div id="disqus_thread"></div>  
-      <script>
-        var disqus_config = function () {
-          this.page.url = 'https://raghavvenkatiyer.github.io/Peregrine-/'; // Your page URL
-          this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; // Unique identifier for this page
-        };
 
-        (function() { // DON'T EDIT BELOW THIS LINE
-          var d = document, s = d.createElement('script');
-          s.src = 'https://conservation-of-peregrine-falcon-pesticides-and-other-anthropogenic-impacts.disqus.com/embed.js';
-          s.setAttribute('data-timestamp', +new Date());
-          (d.head || d.body).appendChild(s);
-        })();
-      </script>
-    </div>
-    
-    <div class="recaptcha-container">
-      <div class="g-recaptcha" data-sitekey="6LdaDUkqAAAAAHMmt2NSwD4x07FQOpNGiwpGtVHK"></div>
-    </div>
-  </div>
-  
-  <script>
-    window.addEventListener('scroll', function() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const zoomImage = document.querySelector('.zoom-image');
-      const content = document.querySelector('.content');
-      
-      const maxScroll = window.innerHeight;
-      
-      // Adjust zoom and fade based on scroll
-      if (scrollTop <= maxScroll) {
-        const scaleFactor = 1 + scrollTop / maxScroll;
-        const opacityFactor = 1 - scrollTop / maxScroll;
-        
-        zoomImage.style.transform = `scale(${scaleFactor})`;
-        zoomImage.style.opacity = opacityFactor;
-        
-        if (scrollTop > maxScroll / 2) {
-          content.classList.add('reveal');
-        } else {
-          content.classList.remove('reveal');
-        }
+      function createUserMessageDiv(message) {
+        const div = document.createElement("div");
+        div.className = "message user-message";
+        div.textContent = `You: ${message}`;
+        return div;
       }
-    });
-  </script>
 
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+      document.querySelector('.btn').addEventListener('click', function() {
+        const userInput = document.getElementById('userprompt').value;
+        if (userInput) {
+          const chatContainer = document.getElementById('chat-container');
+          chatContainer.appendChild(createUserMessageDiv(userInput));
+          // Simulate a bot response (replace with actual logic)
+          setTimeout(() => {
+            chatContainer.appendChild(createBotMessageDiv("This is a simulated response."));
+          }, 1000);
+          document.getElementById('userprompt').value = ""; // Clear the input
+        }
+      });
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </div>
 </body>
 </html>
