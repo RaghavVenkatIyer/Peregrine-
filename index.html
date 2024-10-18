@@ -1,9 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>body { background-color: rgb(242, 192, 41); }</style>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peregrine Falcon Discussion</title>
+  <style>
+  /* Style for bullet points */
+  .animated-list {
+    margin: 20px;
+    padding: 0;
+  }
+
+  .animated-list li {
+    font-size: 18px;
+    margin-bottom: 10px;
+    list-style-type: disc;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  /* Stagger animation for bullet points */
+  .animated-list li:nth-child(1) { animation-delay: 0.2s; }
+  .animated-list li:nth-child(2) { animation-delay: 0.4s; }
+  .animated-list li:nth-child(3) { animation-delay: 0.6s; }
+  .animated-list li:nth-child(4) { animation-delay: 0.8s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Style for progress bar */
+  .progress-bar-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    margin: 20px 0;
+    padding: 5px;
+  }
+
+  .progress-bar {
+    height: 20px;
+    width: 0;
+    background-color: #4caf50;
+    border-radius: 5px;
+    animation: loadProgress 3s ease forwards;
+  }
+
+  @keyframes loadProgress {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  /* Style for normal text */
+  .normal-text {
+    font-size: 16px;
+    margin: 20px 0;
+    line-height: 1.6;
+    color: #333;
+  }
+</style>
+
+<div>
+  <!-- Normal text before bullet points -->
+  <p class="normal-text">This is an introductory paragraph where you can start writing your content. Provide some background or explanation before diving into the bullet points below.</p>
+
+  <!-- Bullet points -->
+  <ul class="animated-list">
+    <li>Point 1: This is a placeholder for your first point or paragraph.</li>
+  </ul>
+
+  <!-- Normal text between bullet points -->
+  <p class="normal-text">Here you can add more detailed information about the first point, expanding on your ideas before moving to the next point.</p>
+
+  <!-- More bullet points -->
+  <ul class="animated-list">
+    <li>Point 2: Here goes more information, continuing with your topic.</li>
+  </ul>
+
+  <p class="normal-text">You can insert further explanations or examples to elaborate on the second point. Use this space for continuous discussion.</p>
+
+  <ul class="animated-list">
+    <li>Point 3: You can elaborate further with detailed information here.</li>
+  </ul>
+
+  <p class="normal-text">Expand your ideas in this section as well. Add relevant insights, facts, or examples.</p>
+
+  <ul class="animated-list">
+    <li>Point 4: Keep expanding on your content to reach the target word count.</li>
+  </ul>
+
+  <!-- Progress bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar"></div>
+  </div>
+</div>
+
   <style>
     body {
       margin: 0;
@@ -179,7 +272,7 @@
 </head>
 <body>
   <div class="zoom-container">
-    <img src="file:///Users/raghavvenkatiyer/Desktop/peregrinefalcon.jpeg" alt="Your Image" class="zoom-image">
+    <img src="peregrinefalcon.jpeg" alt="Your Image" class="zoom-image">
     <div class="scroll-hint">
       <div class="scroll-hint-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -197,7 +290,7 @@
       <div class="chatbot-container">
         <div id="chat-container" class="chat-history"></div>
         <div class="user-input-div">
-          <input type="text" placeholder="Chat with a bot in case of more queries" class="user-input" id="userprompt"/>
+          <input type="text" placeholder="Chat with a bot" class="user-input" id="userprompt"/>
           <button class="btn">Go</button>
         </div>
       </div>
