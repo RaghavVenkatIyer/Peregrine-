@@ -200,22 +200,80 @@
         <button onclick="window.location.href='page3.html';">Visit Page 3 </button>
       </div>
       
-      <div class="chatbot-container">
-        <div id="chat-container" class="chat-history"></div>
-        <div class="user-input-div">
-          <input type="text" placeholder="Chat with a bot in case of more queries" class="user-input" id="userprompt"/>
-          <button class="btn">Go</button>
-        </div>
-      </div>
+      <body style="background-color: #f2c029;">
+    <main>
+      <h1>Simple reCAPTCHA and ChatBot Demo</h1>
+      <form action="?" method="POST">
+        <div class="g-recaptcha" data-sitekey="6LdaDUkqAAAAAHMmt2NSwD4x07FQOpNGiwpGtVHK"></div>
+        <br />
+        <input type="submit" value="Submit">
+      </form>
       
-      <div class="recaptcha-container">
-        <!-- Google reCAPTCHA widget -->
-        <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div><br>
-        <button type="submit">Submit</button>
-        <div id="result"></div>
+      <!-- Chatbot UI -->
+      <div id="chat-container" class="chat-history"></div>
+      <div class="user-input-div">
+        <input type="text" placeholder="Chat With Your Bot" class="user-input" id="userprompt"/>
+        <button class="btn">Go</button>
       </div>
-
-      <div id="disqus_thread"></div>  
+    </main>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+      const API_KEY = "AIzaSyAKXi46TKHR6Ds-fIm3VUQVL2ZuEe8QcJY";
+      const genAI = new GoogleGenerativeAI(API_KEY);
+  
+      document.querySelector('.btn').addEventListener('click', run);
+  
+      async function run() {
+        try {
+          const userInput = document.getElementById("userprompt").value;
+          if (userInput.trim() === "") return;
+  
+          const userMessageDiv = createUserMessageDiv(userInput);
+          document.querySelector('.chat-history').appendChild(userMessageDiv);
+  
+          const botMessageDiv = createBotMessageDiv("Thinking...");
+          document.querySelector('.chat-history').appendChild(botMessageDiv);
+  
+          const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+          const result = await model.generateContent(userInput);
+          const text = extractTextFromResponse(result.response);
+  
+          const newBotMessageDiv = createBotMessageDiv(text);
+          document.querySelector('.chat-history').appendChild(newBotMessageDiv);
+        } catch (err) {
+          alert(err);
+        }
+      }
+  
+      function extractTextFromResponse(response) {
+        if (response.candidates && response.candidates.length > 0) {
+          return response.candidates[0].content.parts.map(part => part.text || '').join('');
+        }
+        return "No valid response from AI";
+      }
+  
+      function createUserMessageDiv(message) {
+        const div = document.createElement("div");
+        div.className = "message user-message";
+        div.textContent = `User: ${message}`;
+        return div;
+      }
+  
+      function createBotMessageDiv(message) {
+        const div = document.createElement("div");
+        div.className = "message bot-message";
+        div.textContent = `Bot: ${message}`;
+        return div;
+      }
+    </script>
+     <div id="disqus_thread"></div>  
       <script>
         var disqus_config = function () {
           this.page.url = 'https://raghavvenkatiyer.github.io/Peregrine-/'; // Your page URL
