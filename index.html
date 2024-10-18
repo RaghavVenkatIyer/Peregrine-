@@ -7,7 +7,6 @@
     body {
       margin: 0;
       overflow: hidden; /* Prevent body scrolling */
-      font-family: Arial, sans-serif; /* Set a default font */
     }
 
     .zoom-container {
@@ -118,7 +117,7 @@
 
     .recaptcha-container {
       position: absolute;
-      bottom: 20px;
+      bottom: 20px; 
       left: 20px; 
       z-index: 1003;
       text-align: center;
@@ -176,13 +175,11 @@
       gap: 10px;
     }
 
-    /* Styles for Disqus Thread */
+    /* Added styles for Disqus */
     #disqus_thread {
-      max-height: 350px;
-      margin: 20px 0; /* Adjusts margin around the Disqus thread */
-      border: none; /* Ensures there is no border */
-      padding: 0; /* Resets padding */
-      overflow: hidden; /* Prevents overflow issues */
+      width: 100%;
+      margin-top: 20px;
+      z-index: 1000; /* Ensure it's above other content */
     }
   </style>
 </head>
@@ -200,7 +197,7 @@
     <div class="content">
       <div class="button-container">
         <button onclick="window.location.href='page2.html';">Visit Page 2</button>
-        <button onclick="window.location.href='page3.html';">Visit Page 3</button>
+        <button onclick="window.location.href='page3.html';">Visit Page 3 </button>
       </div>
       
       <div class="chatbot-container">
