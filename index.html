@@ -6,14 +6,13 @@
   <style>
     body {
       margin: 0;
-      overflow: hidden; /* Prevent body scrolling */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
     }
 
     .zoom-container {
       position: relative;
       height: 100vh;
       overflow: hidden; /* Prevent scrolling of zoom container */
-      overflow-y: scroll; /* Allow vertical scrolling */
     }
 
     .zoom-image {
@@ -25,12 +24,6 @@
       object-fit: cover;
       transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
       z-index: 1000;
-    }
-
-    .zoom-image.zoomed {
-      transform: scale(1.2);
-      opacity: 0.5;
-      pointer-events: none; /* Disable interaction with zoomed image */
     }
 
     .content {
@@ -283,36 +276,43 @@
 
         (function() { // DON'T EDIT BELOW THIS LINE
           var d = document, s = d.createElement('script');
-          s.src = 'https://conservation-of-peregrine-falcon.disqus.com/embed.js';
+          s.src = 'https://conservation-of-peregrine-falcon-pesticides-and-other-anthropogenic-impacts.disqus.com/embed.js';
           s.setAttribute('data-timestamp', +new Date());
           (d.head || d.body).appendChild(s);
         })();
       </script>
-      </div>
+    </div>
+    
+    <div class="recaptcha-container">
+      <div class="g-recaptcha" data-sitekey="6LdaDUkqAAAAAHMmt2NSwD4x07FQOpNGiwpGtVHK"></div>
     </div>
   </div>
-
+  
   <script>
-    const zoomImage = document.querySelector('.zoom-image');
-    const content = document.querySelector('.content');
-    const zoomContainer = document.querySelector('.zoom-container');
-
-    let scrollPosition = 0;
-
-    zoomContainer.addEventListener('scroll', () => {
-      scrollPosition = zoomContainer.scrollTop / zoomContainer.scrollHeight;
-
-      if (scrollPosition > 0.1) {
-        zoomImage.classList.add('zoomed');
-        content.classList.add('reveal');
-      } else {
-        zoomImage.classList.remove('zoomed');
-        content.classList.remove('reveal');
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const zoomImage = document.querySelector('.zoom-image');
+      const content = document.querySelector('.content');
+      
+      const maxScroll = window.innerHeight;
+      
+      // Adjust zoom and fade based on scroll
+      if (scrollTop <= maxScroll) {
+        const scaleFactor = 1 + scrollTop / maxScroll;
+        const opacityFactor = 1 - scrollTop / maxScroll;
+        
+        zoomImage.style.transform = `scale(${scaleFactor})`;
+        zoomImage.style.opacity = opacityFactor;
+        
+        if (scrollTop > maxScroll / 2) {
+          content.classList.add('reveal');
+        } else {
+          content.classList.remove('reveal');
+        }
       }
     });
-
-    // Enable scrolling on the zoom container
-    zoomContainer.style.overflowY = "scroll";
   </script>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>
