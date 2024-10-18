@@ -13,6 +13,7 @@
       position: relative;
       height: 100vh;
       overflow: hidden; /* Prevent scrolling of zoom container */
+      overflow-y: scroll; /* Allow vertical scrolling */
     }
 
     .zoom-image {
@@ -282,91 +283,36 @@
 
         (function() { // DON'T EDIT BELOW THIS LINE
           var d = document, s = d.createElement('script');
-          s.src = 'https://conservation-of-peregrine-falcon-pesticide.disqus.com/embed.js'; // Correct shortname here
+          s.src = 'https://conservation-of-peregrine-falcon.disqus.com/embed.js';
           s.setAttribute('data-timestamp', +new Date());
           (d.head || d.body).appendChild(s);
         })();
       </script>
-      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-      <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon-pesticide.disqus.com/count.js" async></script>
-      
-      <script>
-        // Handle button clicks
-        document.addEventListener('click', function(event) {
-          if (event.target.tagName === 'BUTTON') {
-            event.preventDefault();  // Prevent default form submission
-
-            // Get reCAPTCHA response token
-            var recaptchaResponse = grecaptcha.getResponse();
-
-            if (recaptchaResponse.length === 0) {
-              document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
-            } else {
-              var formData = new FormData();
-              formData.append('recaptchaToken', recaptchaResponse);
-              document.getElementById('result').innerText = "reCAPTCHA verification successful!";
-            }
-          }
-        });
-
-        const zoomImage = document.querySelector('.zoom-image');
-        const content = document.querySelector('.content');
-        const zoomContainer = document.querySelector('.zoom-container');
-
-        zoomContainer.addEventListener('wheel', (event) => {
-          if (event.deltaY > 0) {
-            zoomImage.classList.add('zoomed');
-            content.classList.add('reveal');
-          } else {
-            zoomImage.classList.remove('zoomed');
-            content.classList.remove('reveal');
-          }
-        });
- <script type="importmap">
-    {
-      "imports": {
-        "@google/generative-ai": "https://esm.run/@google/generative-ai"
-      }
-    }
-  </script>
-  <script type="module">
-    import { GoogleGenerativeAI } from "@google/generative-ai";
-    const API_KEY = "AIzaSyAKXi46TKHR6Ds-fIm3VUQVL2ZuEe8QcJY";
-    const genAI = new GoogleGenerativeAI(API_KEY);
-
-    document.querySelector('.btn').addEventListener('click', run);
-
-    async function run() {
-      try {
-        const userInput = document.getElementById("userprompt").value;
-        if (userInput.trim() === "") return;
-
-        const userMessageDiv = createUserMessageDiv(userInput);
-        document.querySelector('.chat-history').appendChild(userMessageDiv);
-
-        const botMessageDiv = createBotMessageDiv("Thinking...");
-        document.querySelector('.chat-history').appendChild(botMessageDiv);
-
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const result = await model.generateContent(userInput);
-        const text = extractTextFromResponse(result.response);
-
-        const newBotMessageDiv = createBotMessageDiv(text);
-        document.querySelector('.chat-history').appendChild(newBotMessageDiv);
-      } catch (err) {
-        alert(err);
-      }
-    }
-
-    function extractTextFromResponse(response) {
-      if (response.candidates && response.candidates.length > 0) {
-        return response.candidates[0].content.parts.map(part => part.text || '').join('');
-      }
-      return "No valid response from AI";
-    }
-  </script>
-      </script>
+      </div>
     </div>
   </div>
+
+  <script>
+    const zoomImage = document.querySelector('.zoom-image');
+    const content = document.querySelector('.content');
+    const zoomContainer = document.querySelector('.zoom-container');
+
+    let scrollPosition = 0;
+
+    zoomContainer.addEventListener('scroll', () => {
+      scrollPosition = zoomContainer.scrollTop / zoomContainer.scrollHeight;
+
+      if (scrollPosition > 0.1) {
+        zoomImage.classList.add('zoomed');
+        content.classList.add('reveal');
+      } else {
+        zoomImage.classList.remove('zoomed');
+        content.classList.remove('reveal');
+      }
+    });
+
+    // Enable scrolling on the zoom container
+    zoomContainer.style.overflowY = "scroll";
+  </script>
 </body>
 </html>
