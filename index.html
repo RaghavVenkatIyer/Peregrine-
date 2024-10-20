@@ -6,14 +6,17 @@
   <style>
   body {
   margin: 0;
-  overflow: hidden;
+  overflow: auto;
   background-color: transparent; /* No background color for the body */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  color: rgb(115, 97, 81); /* Set the body text color*/
 }
-
 .content {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 5;
+  left: 5;
   width: 100%;
   height: 100%;
   background-color: transparent; /* Keep transparent initially */
@@ -210,61 +213,65 @@
       display: flex; /* Flexbox to align input and button */
       gap: 10px;
     }
-/* Added styles for Disqus */
-.disqus-container {
-    width: 90%; /* Adjusted width for a smaller size */
-    margin: 10px auto; /* Center the container with a smaller margin */
-    z-index: 1000; /* Ensure it's above other content */
-    position: fixed; /* Keep it fixed in place */
-    bottom: 100px; /* Positioned above the bottom, ensure it doesn't overlap with reCAPTCHA or chatbot */
-    background-color: #BFAE99;
-    padding: 5px; /* Reduced padding for smaller size */
+    .container {
+    flex: 1; /* Allow this container to grow and fill available space */
+    display: flex;
+    flex-direction: column; /* Arrange child elements in a column */
+    justify-content: space-between; /* Space elements evenly */
+}
+    .disqus-container {
+    width: 70%; /* Width of the discussion forum */
+    margin: 0 auto; /* Center the container horizontally */
+    z-index: 1001; /* Ensure it's above other content */
+    position: fixed; /* Fix position so it stays at the bottom */
+    bottom: 5px; /* Positioned 20px above the bottom of the viewport */
+    background-color: #BFAE99; /* Background color */
+    padding: 30px; /* Increased padding for a more spacious appearance */
+    height: 450px; /* Increased height for better visibility */
     opacity: 0; /* Initially hidden */
-    transition: opacity 0.5s ease-in-out; /* Fade in effect */
+    transition: opacity 0.5s ease-in-out; /* Fade-in effect */
+    border-radius: 10px; /* Rounded corners for aesthetics */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust position to center */
+    overflow: auto; /* Prevent overflow if needed */
 }
 
-/* Ensure Disqus becomes visible only after scrolling */
+/* Ensure that the Disqus container is visible only after scrolling */
 .disqus-container.visible {
     opacity: 1; /* Make Disqus fully visible when the class is added */
-}
-
-/* Adjust the zoom image settings to ensure no overlap */
-.zoom-image.zoomed {
-    opacity: 0.5;
-    pointer-events: none; /* Ensure it doesn't block interactions */
-    position: absolute; /* Keep it absolute for proper layering */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scale(1.2);
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-    z-index: 998; /* Set z-index lower than Disqus */
 }
 
 /* Ensure the body fills the viewport */
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    overflow: hidden;
-}
-
-.zoom-container {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
+    overflow-x: auto; /* No horizontal overflow */
 }
 
 /* Ensure that the Disqus container is positioned correctly */
-.zoom-container .disqus-container {
-    position: fixed; /* Ensure it stays fixed */
-    bottom: 100px; /* Adjusted to stay above the bottom */
-    opacity: 1; /* Ensure it's fully visible */
+.zoom-container {
+    position: relative;
+    min-height: 100vh;
+    overflow: auto;
 }
 
+/* Removed zoom image overlap styles */
+
+/* JavaScript to make Disqus visible after scrolling past the image */
+window.addEventListener('scroll', () => {
+  const disqusContainer = document.querySelector('.disqus-container');
+  const zoomContainer = document.querySelector('.zoom-container');
+  const zoomContainerBottom = zoomContainer.getBoundingClientRect().bottom;
+  
+  // Check if the zoom-container (image section) is out of view
+  if (zoomContainerBottom <= 0) {
+    disqusContainer.classList.add('visible');
+  } else {
+    disqusContainer.classList.remove('visible');
+  }
+});
 
     /* Style for progress bar */
     .progress-bar-container {
@@ -523,6 +530,24 @@ body {
   </script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </div> 
+<!-- JavaScript to handle scroll and make Disqus visible -->
+<script>
+    // Get the Disqus container
+    const disqusContainer = document.getElementById('disqus_thread');
+  
+    // Add a scroll event listener to make Disqus visible after scrolling
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const scrollPercent = scrollY / windowHeight;
+  
+      // Show Disqus container after scrolling 60% down the page
+      if (scrollPercent >= 0.6) {
+        disqusContainer.classList.add('visible');
+      }
+    });
+  </script>
+  
 </body> 
 </html>
 
