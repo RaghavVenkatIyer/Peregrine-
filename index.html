@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -11,7 +15,7 @@
   height: auto;
   display: flex;
   flex-direction: column;
-  color: rgb(115, 97, 81); /* Set the body text color*/
+  color: rgb(166, 146, 88); /* Set the body text color*/
 }
 .content {
   position: absolute;
@@ -259,20 +263,6 @@ body {
 
 /* Removed zoom image overlap styles */
 
-/* JavaScript to make Disqus visible after scrolling past the image */
-window.addEventListener('scroll', () => {
-  const disqusContainer = document.querySelector('.disqus-container');
-  const zoomContainer = document.querySelector('.zoom-container');
-  const zoomContainerBottom = zoomContainer.getBoundingClientRect().bottom;
-  
-  // Check if the zoom-container (image section) is out of view
-  if (zoomContainerBottom <= 0) {
-    disqusContainer.classList.add('visible');
-  } else {
-    disqusContainer.classList.remove('visible');
-  }
-});
-
     /* Style for progress bar */
     .progress-bar-container {
       width: 100%;
@@ -357,31 +347,32 @@ window.addEventListener('scroll', () => {
       </div>
 
       <!-- Normal text before bullet points -->
-      <p class="normal-text">This is an introductory paragraph where you can start writing your content. Provide some background or explanation before diving into the bullet points below.</p>
+      <p class="normal-text">The peregrine falcon (Falco peregrinus), known for its incredible speed, is often called the fastest bird on Earth. Capable of reaching speeds over 240 miles per hour (386 km/h) during its hunting stoop (a high-speed dive), it is a master of aerial agility and precision. Found on every continent except Antarctica, peregrine falcons have adapted to various environments, from coastal cliffs and mountainous regions to urban landscapes where they often nest on skyscrapers.</p>
 
       <!-- Bullet points -->
       <ul class="animated-list">
-        <li>Point 1: This is a placeholder for your first point or paragraph.</li>
+        <li>Fastest Animal: The peregrine falcon holds the title of the fastest animal on Earth, thanks to its high-speed dives, which can exceed 240 mph.
+            Urban Adapters: Although they traditionally nest on cliffs, peregrine falcons have adapted well to cities. Skyscrapers provide them with tall perches that resemble their natural cliffside nesting sites, and the abundance of pigeons and other urban birds offers an ample food supply.</li>
       </ul>
 
       <!-- Normal text between bullet points -->
-      <p class="normal-text">Here you can add more detailed information about the first point, expanding on your ideas before moving to the next point.</p>
+      <p class="normal-text">Peregrine falcons are medium-sized birds of prey, with adults typically measuring 14 to 19 inches (36 to 49 cm) in length and boasting a wingspan of 3.3 to 3.6 feet (1 to 1.1 meters). Their plumage is distinct, featuring a blue-gray back, barred white underparts, and a black "moustache" stripe across their faces. Males are slightly smaller than females, which is common among birds of prey.</p>
 
       <!-- More bullet points -->
       <ul class="animated-list">
-        <li>Point 2: Here goes more information, continuing with your topic.</li>
+        <li>During the mid-20th century, peregrine falcon populations experienced a dramatic decline, particularly in North America and Europe. This was largely due to the widespread use of the pesticide DDT, which interfered with the calcium production in female falcons, causing their eggshells to thin and break before the chicks could hatch. By the 1960s, peregrine falcons were nearly wiped out in many areas, and the species was placed on the endangered species list.</li>
       </ul>
 
-      <p class="normal-text">You can insert further explanations or examples to elaborate on the second point. Use this space for continuous discussion.</p>
+      <p class="normal-text">One of the peregrine falcon's most impressive features is its keen eyesight, eight times sharper than that of a human. This incredible vision enables it to spot prey from distances of up to two miles. The falcon hunts primarily by flying high, spotting birds below, and then diving at them at lightning speed, striking with talons to capture its prey.</p>
 
       <ul class="animated-list">
-        <li>Point 3: You can elaborate further with detailed information here.</li>
+        <li>Thanks to concerted conservation efforts, including the banning of DDT in the United States in 1972, captive breeding programs, and reintroduction efforts, the peregrine falcon made a remarkable recovery. The bird was removed from the U.S. Endangered Species list in 1999, symbolizing one of the greatest success stories in wildlife conservation.</li>
       </ul>
 
-      <p class="normal-text">Expand your ideas in this section as well. Add relevant insights, facts, or examples.</p>
+      <p class="normal-text">Today, peregrine falcons are considered a species of least concern, with a global population estimated to be between 140,000 and 300,000 individuals. They can be found in various regions worldwide, with stable or increasing numbers in most places. Despite this positive outlook, localized threats such as habitat destruction and pesticide use continue to pose challenges in some areas.</p>
 
       <ul class="animated-list">
-        <li>Point 4: Keep expanding on your content to reach the target word count.</li>
+        <li>In urban environments, peregrine falcons have adapted to modern life, and their presence is often celebrated by city-dwellers, who may catch sight of these magnificent birds perched on ledges or engaging in high-speed chases over busy streets. With continued protection and monitoring, the peregrine falcon's future looks promising, and its story serves as a reminder of the impact humans can have—both negative and positive—on the natural world.</li>
       </ul>
 
       <!-- Progress bar -->
@@ -550,8 +541,6 @@ window.addEventListener('scroll', () => {
   
 </body> 
 </html>
-
-
 
 
 
