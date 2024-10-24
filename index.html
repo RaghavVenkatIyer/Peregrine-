@@ -1,61 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      overflow: auto;
-      background-color: transparent;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      color: rgb(166, 146, 88);
-    }
+  body {
+  margin: 0;
+  overflow: auto;
+  background-color: transparent; /* No background color for the body */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  color: rgb(166, 146, 88); /* Set the body text color*/
+}
+.content {
+  position: absolute;
+  top: 5;
+  left: 5;
+  width: 100%;
+  height: 100%;
+  background-color: transparent; /* Keep transparent initially */
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
 
-    .zoom-container {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-    }
+.content.reveal {
+  opacity: 1;
+  background-color: rgb(242, 192, 41); /* Apply yellow background when content is revealed */
+}
 
     .zoom-image {
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
       object-fit: cover;
       transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+      z-index: 1000;
     }
 
     .zoom-image.zoomed {
       transform: scale(1.2);
-      opacity: 0;
+      opacity: 0; /* Fade out image */
     }
 
     .content {
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: auto;
-      background-color: transparent;
+      height: 100%;
+      background-color: #fff;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 1001;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 100px 20px;
+      padding-top: 100px; /* Added padding to avoid overlap with buttons */
+    }
+
+    .content.reveal {
+      opacity: 1;
     }
 
     .scroll-hint {
-      position: relative;
-      margin-bottom: 20px;
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
+      z-index: 1001;
     }
 
     .scroll-hint-icon {
@@ -70,13 +96,49 @@
     }
 
     @keyframes scroll-hint-icon {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(10px); }
-      100% { transform: translateY(0); }
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .normal-text.visible {
+      opacity: 1;
+    }
+
+    /* Animation for text gaps */
+    .animated-gap {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255,0,0,0.5) 50%, rgba(255,0,0,0.5) 100%);
+      animation: colorChange 2s infinite;
+    }
+
+    @keyframes colorChange {
+      0% { background-color: rgba(255, 255, 255, 0); }
+ 50% { background-color: rgba(255, 0, 0, 0.5); }
+      100% { background-color: rgba(255, 255, 255, 0); }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .scroll-hint-text {
+      font-size: 14px;
+      color: #fff;
+      font-weight: bold;
     }
 
     .button-container {
-      margin: 20px 0;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1002;
       display: flex;
       gap: 10px;
     }
@@ -96,35 +158,124 @@
       background-color: #0056b3;
     }
 
-    .normal-text, .animated-list {
-      margin: 20px 0;
-      line-height: 1.6;
-      text-align: justify;
-      color: #333;
+    .recaptcha-container {
+      position: absolute;
+      bottom: 120px;
+      left: 20px;
+      z-index: 1003;
+      text-align: center;
     }
 
-    .animated-list li {
-      list-style-type: disc;
-      opacity: 0;
-      animation: fadeIn 1s ease forwards;
+    #result {
+      margin-top: 10px;
+      color: red;
     }
 
-    .animated-list li:nth-child(1) { animation-delay: 0.2s; }
-    .animated-list li:nth-child(2) { animation-delay: 0.4s; }
-    .animated-list li:nth-child(3) { animation-delay: 0.6s; }
-    .animated-list li:nth-child(4) { animation-delay: 0.8s; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .chatbot-container {
+      position: absolute;
+      bottom: 20px; /* Adjusted to avoid overlap with reCAPTCHA */
+      left: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
     }
 
+    .message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .user-message {
+      color: #333 ;
+      background-color: #efb505;
+    }
+
+    .bot-message {
+      color: #a69258;
+      background-color: #736151;
+    }
+
+    #chat-container {
+      width: 100%; /* Updated to fill the container */
+      max-height: 200px; /* Limited height for scroll */
+      border: 1px solid #63be77;
+      padding: 5px;
+      overflow-y: auto;
+      background-color: #bfae99;
+    }
+
+    .chat-history {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .user-input-div {
+      margin-top: 10px;
+      display: flex; /* Flexbox to align input and button */
+      gap: 10px;
+    }
+    .container {
+    flex: 1; /* Allow this container to grow and fill available space */
+    display: flex;
+    flex-direction: column; /* Arrange child elements in a column */
+    justify-content: space-between; /* Space elements evenly */
+}
+    .disqus-container {
+    width: 70%; /* Width of the discussion forum */
+    margin: 0 auto; /* Center the container horizontally */
+    z-index: 1001; /* Ensure it's above other content */
+    position: fixed; /* Fix position so it stays at the bottom */
+    bottom: 5px; /* Positioned 20px above the bottom of the viewport */
+    background-color: #BFAE99; /* Background color */
+    padding: 30px; /* Increased padding for a more spacious appearance */
+    height: 450px; /* Increased height for better visibility */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.5s ease-in-out; /* Fade-in effect */
+    border-radius: 10px; /* Rounded corners for aesthetics */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust position to center */
+    overflow: auto; /* Prevent overflow if needed */
+}
+
+/* Ensure that the Disqus container is visible only after scrolling */
+.disqus-container.visible {
+    opacity: 1; /* Make Disqus fully visible when the class is added */
+}
+
+/* Ensure the body fills the viewport */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: auto; /* No horizontal overflow */
+}
+
+/* Ensure that the Disqus container is positioned correctly */
+.zoom-container {
+    position: relative;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+/* Removed zoom image overlap styles */
+
+    /* Style for progress bar */
     .progress-bar-container {
       width: 100%;
       background-color: #f3f3f3;
       border-radius: 5px;
       margin: 20px 0;
       padding: 5px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .progress-bar-container.visible {
+      opacity: 1;
     }
 
     .progress-bar {
@@ -140,60 +291,49 @@
       to { width: 100%; }
     }
 
-    .chatbot-container {
-      position: relative;
-      width: 100%;
-      background-color: #fff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .chat-history {
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .user-input-div {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .disqus-container {
-      width: 70%;
-      margin: 30px auto 0;
-      padding: 30px;
-      background-color: #BFAE99;
-      height: 450px;
-      overflow: auto;
-      border-radius: 10px;
+    /* Style for normal text */
+    .normal-text {
+      font-size: 16px;
+      margin: 20px 0;
+      line-height: 1.6;
+      color: #333;
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
     }
 
-    .disqus-container.visible {
+    .normal-text.visible {
       opacity: 1;
     }
 
-    .recaptcha-container {
-      margin: 30px auto;
-      text-align: center;
+    .animated-list {
+      margin: 20px;
+      padding: 0;
     }
 
-    .container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    .animated-list li {
+      font-size: 18px;
+      margin-bottom: 10px;
+      list-style-type: disc;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .animated-list li:nth-child(1) { animation-delay: 0.2s; }
+    .animated-list li:nth-child(2) { animation-delay: 0.4s; }
+    .animated-list li:nth-child(3) { animation-delay: 0.6s; }
+    .animated-list li:nth-child(4) { animation-delay: 0.8s; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
-
 <body>
   <div class="zoom-container">
     <img src="peregrinefalcon.jpeg" alt="Your Image" class="zoom-image">
     <div class="scroll-hint">
-      <div class="scroll-hint-icon">
+ <div class="scroll-hint-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -206,51 +346,201 @@
         <button onclick="window.location.href='page3.html';">Visit Page 3 </button>
       </div>
 
-      <p class="normal-text">The peregrine falcon (Falco peregrinus), known for its incredible speed...</p>
+      <!-- Normal text before bullet points -->
+      <p class="normal-text">The peregrine falcon (Falco peregrinus), known for its incredible speed, is often called the fastest bird on Earth. Capable of reaching speeds over 240 miles per hour (386 km/h) during its hunting stoop (a high-speed dive), it is a master of aerial agility and precision. Found on every continent except Antarctica, peregrine falcons have adapted to various environments, from coastal cliffs and mountainous regions to urban landscapes where they often nest on skyscrapers.</p>
 
+      <!-- Bullet points -->
       <ul class="animated-list">
-        <li>Fastest Animal: The peregrine falcon holds the title...</li>
+        <li>Fastest Animal: The peregrine falcon holds the title of the fastest animal on Earth, thanks to its high-speed dives, which can exceed 240 mph.
+            Urban Adapters: Although they traditionally nest on cliffs, peregrine falcons have adapted well to cities. Skyscrapers provide them with tall perches that resemble their natural cliffside nesting sites, and the abundance of pigeons and other urban birds offers an ample food supply.</li>
       </ul>
 
-      <p class="normal-text">Peregrine falcons are medium-sized birds of prey...</p>
+      <!-- Normal text between bullet points -->
+      <p class="normal-text">Peregrine falcons are medium-sized birds of prey, with adults typically measuring 14 to 19 inches (36 to 49 cm) in length and boasting a wingspan of 3.3 to 3.6 feet (1 to 1.1 meters). Their plumage is distinct, featuring a blue-gray back, barred white underparts, and a black "moustache" stripe across their faces. Males are slightly smaller than females, which is common among birds of prey.</p>
 
+      <!-- More bullet points -->
       <ul class="animated-list">
-        <li>During the mid-20th century, peregrine falcon populations...</li>
+        <li>During the mid-20th century, peregrine falcon populations experienced a dramatic decline, particularly in North America and Europe. This was largely due to the widespread use of the pesticide DDT, which interfered with the calcium production in female falcons, causing their eggshells to thin and break before the chicks could hatch. By the 1960s, peregrine falcons were nearly wiped out in many areas, and the species was placed on the endangered species list.</li>
       </ul>
 
+      <p class="normal-text">One of the peregrine falcon's most impressive features is its keen eyesight, eight times sharper than that of a human. This incredible vision enables it to spot prey from distances of up to two miles. The falcon hunts primarily by flying high, spotting birds below, and then diving at them at lightning speed, striking with talons to capture its prey.</p>
+
+      <ul class="animated-list">
+        <li>Thanks to concerted conservation efforts, including the banning of DDT in the United States in 1972, captive breeding programs, and reintroduction efforts, the peregrine falcon made a remarkable recovery. The bird was removed from the U.S. Endangered Species list in 1999, symbolizing one of the greatest success stories in wildlife conservation.</li>
+      </ul>
+
+      <p class="normal-text">Today, peregrine falcons are considered a species of least concern, with a global population estimated to be between 140,000 and 300,000 individuals. They can be found in various regions worldwide, with stable or increasing numbers in most places. Despite this positive outlook, localized threats such as habitat destruction and pesticide use continue to pose challenges in some areas.</p>
+
+      <ul class="animated-list">
+        <li>In urban environments, peregrine falcons have adapted to modern life, and their presence is often celebrated by city-dwellers, who may catch sight of these magnificent birds perched on ledges or engaging in high-speed chases over busy streets. With continued protection and monitoring, the peregrine falcon's future looks promising, and its story serves as a reminder of the impact humans can have—both negative and positive—on the natural world.</li>
+      </ul>
+
+      <!-- Progress bar -->
       <div class="progress-bar-container">
         <div class="progress-bar"></div>
       </div>
 
+      <!-- Chatbot UI -->
       <div id="chat-container" class="chat-history"></div>
       <div class="user-input-div">
-        <input type="text" placeholder="Chat With Your Bot" id="userprompt" />
+        <input type="text" placeholder="Chat With Your Bot" class="user-input" id="userprompt"/>
         <button class="btn">Go</button>
       </div>
-    </div>
+    </main>
+
+    <!-- Google Generative AI ChatBot Integration -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+      const API_KEY = "AIzaSyAKXi46TKHR6Ds-fIm3VUQVL2ZuEe8QcJY";
+      const genAI = new GoogleGenerativeAI(API_KEY);
+
+      document.querySelector('.btn').addEventListener('click', run);
+
+      async function run() {
+        try {
+          const userInput = document.getElementById("userprompt").value;
+          if (userInput.trim() === "") return;
+
+          const userMessageDiv = createUserMessageDiv(userInput);
+          document.querySelector('.chat-history').appendChild(userMessageDiv);
+
+          const botMessageDiv = createBotMessageDiv("Thinking...");
+          document.querySelector('.chat-history').appendChild(botMessageDiv);
+
+          const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+          const result = await model.generateContent(userInput);
+          const text = extractTextFromResponse(result.response);
+
+          const newBotMessageDiv = createBotMessageDiv(text);
+          document.querySelector('.chat-history').appendChild(newBotMessageDiv);
+        } catch (err) {
+          alert(err);
+        }
+      }
+
+      function extractTextFromResponse(response) {
+        if (response.candidates && response.candidates.length > 0) {
+          return response.candidates[0].content.parts.map(part => part.text || '').join('');
+        }
+        return "No valid response from AI";
+      }
+
+      function createUserMessageDiv(message) {
+        const div = document.createElement("div");
+        div.className = "message user-message";
+        div.textContent = `:User  ${message}`;
+        return div;
+      }
+
+      function createBotMessageDiv(message) {
+        const div = document.createElement("div");
+        div.className = "message bot-message";
+        div.textContent = `Bot: ${message}`;
+        return div;
+      }
+    </script>
 
     <div class="recaptcha-container">
-      <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+      <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div>
       <button type="submit">Submit</button>
     </div>
 
-    <div class="disqus-container">
-      <div id="disqus_thread"></div>
-    </div>
+    <div id="result"></div>
   </div>
 
+  <div class="disqus-container fixed-bottom bg-secondary bg-opacity-75 p-4 rounded mx-auto" style="width: 70%; height: 450px; overflow: auto; opacity: 0; z-index: 1001; transition: opacity 0.5s ease-in-out;">
+    <div id="disqus_thread"></div>
+  </div>  
   <script>
     var disqus_config = function () {
-      this.page.url = 'your-page-url'; 
-      this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; 
+      this.page.url = 'https://raghavvenkatiyer.github.io/Peregrine-/'; // Your page URL
+      this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; // Unique identifier for this page
     };
 
-    (function() {
+    (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');
-      s.src = 'https://example.disqus.com/embed.js';
+      s.src = 'https://conservation-of-peregrine-falcon-pesticide.disqus.com/embed.js'; // Correct shortname here
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
   </script>
-</body>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon-pesticide.disqus.com/count.js" async></script>
+
+  <script>
+    // Handle button clicks
+    document.addEventListener('click', function(event) {
+      if (event.target.tagName === 'BUTTON') {
+        event.preventDefault();  // Prevent default form submission
+
+        // Get reCAPTCHA response token
+        var recaptchaResponse = grecaptcha.getResponse();
+
+        if (recaptchaResponse.length === 0) {
+          document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
+        } else {
+          var formData = new FormData();
+          formData.append('recaptchaToken', recaptchaResponse);
+          document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+        }
+      }
+    });
+
+    const zoomImage = document.querySelector('.zoom-image');
+    const content = document.querySelector('.content');
+    const zoomContainer = document.querySelector('.zoom-container');
+    const disqusContainer = document.querySelector('.disqus-container'); // Get the Disqus container
+    const progressBarContainer = document.querySelector('.progress-bar-container');
+    const normalTextElements = document.querySelectorAll('.normal-text');
+
+    zoomContainer.addEventListener('wheel', (event) => {
+      if (event.deltaY > 0) {
+        zoomImage.classList.add('zoomed');
+        content.classList.add('reveal');
+        disqusContainer.classList.add('visible'); // Reveal Disqus when scrolled
+        progressBarContainer.classList.add('visible'); // Reveal progress bar
+        normalTextElements.forEach(text => text.classList.add('visible')); // Reveal normal text elements
+        document.body.classList.add('scrolled'); // Add the scrolled class to the body
+      } else {
+        zoomImage.classList.remove('zoomed');
+        content.classList.remove('reveal');
+        disqusContainer.classList.remove('visible'); // Hide Disqus when scrolled back
+        progressBarContainer.classList.remove('visible'); // Hide progress bar
+        normalTextElements.forEach(text => text.classList.remove('visible')); // Hide normal text elements
+        document.body.classList.remove('scrolled'); // Remove the scrolled class from the body
+      }
+    });
+
+  </script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</div> 
+<!-- JavaScript to handle scroll and make Disqus visible -->
+<script>
+    // Get the Disqus container
+    const disqusContainer = document.getElementById('disqus_thread');
+  
+    // Add a scroll event listener to make Disqus visible after scrolling
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const scrollPercent = scrollY / windowHeight;
+  
+      // Show Disqus container after scrolling 60% down the page
+      if (scrollPercent >= 0.6) {
+        disqusContainer.classList.add('visible');
+      }
+    });
+  </script>
+  
+</body> 
 </html>
+
+
+
