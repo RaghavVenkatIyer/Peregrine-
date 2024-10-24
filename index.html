@@ -1,99 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peregrine Falcon</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow-x: hidden; /* Prevent horizontal overflow */
-            background-color: transparent;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            color: rgb(166, 146, 88);
-        }
-        .zoom-container {
-            flex: 1; /* Allow this container to grow and fill available space */
-            position: relative;
-            overflow: hidden; /* Prevent overflow */
-        }
-        .chatbot-container, .disqus-container {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-        }
-        .disqus-container {
-            height: 450px; /* Fixed height for Disqus */
-            display: none; /* Initially hidden */
-        }
-        .disqus-container.visible {
-            display: block; /* Show when needed */
-        }
-        .chat-history {
-            max-height: 200px; /* Limited height for scroll */
-            overflow-y: auto;
-            background-color: #bfae99;
-            padding: 5px;
-            border: 1px solid #63be77;
-        }
-        /* Other styles remain unchanged */
-    </style>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      overflow: auto;
+      background-color: transparent;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: rgb(166, 146, 88);
+    }
+
+    .zoom-container {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .zoom-image {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    }
+
+    .zoom-image.zoomed {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+
+    .content {
+      position: relative;
+      width: 100%;
+      height: auto;
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 100px 20px;
+    }
+
+    .scroll-hint {
+      position: relative;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .scroll-hint-icon {
+      margin-bottom: 10px;
+    }
+
+    .scroll-hint-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: #fff;
+      animation: scroll-hint-icon 2s infinite;
+    }
+
+    @keyframes scroll-hint-icon {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+      100% { transform: translateY(0); }
+    }
+
+    .button-container {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .normal-text, .animated-list {
+      margin: 20px 0;
+      line-height: 1.6;
+      text-align: justify;
+      color: #333;
+    }
+
+    .animated-list li {
+      list-style-type: disc;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .animated-list li:nth-child(1) { animation-delay: 0.2s; }
+    .animated-list li:nth-child(2) { animation-delay: 0.4s; }
+    .animated-list li:nth-child(3) { animation-delay: 0.6s; }
+    .animated-list li:nth-child(4) { animation-delay: 0.8s; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      background-color: #f3f3f3;
+      border-radius: 5px;
+      margin: 20px 0;
+      padding: 5px;
+    }
+
+    .progress-bar {
+      height: 20px;
+      width: 0;
+      background-color: #4caf50;
+      border-radius: 5px;
+      animation: loadProgress 3s ease forwards;
+    }
+
+    @keyframes loadProgress {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .chatbot-container {
+      position: relative;
+      width: 100%;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-history {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .user-input-div {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .disqus-container {
+      width: 70%;
+      margin: 30px auto 0;
+      padding: 30px;
+      background-color: #BFAE99;
+      height: 450px;
+      overflow: auto;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .disqus-container.visible {
+      opacity: 1;
+    }
+
+    .recaptcha-container {
+      margin: 30px auto;
+      text-align: center;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="zoom-container">
-        <img src="peregrinefalcon.jpeg" alt="Your Image" class="zoom-image">
-        <div class="scroll-hint">
-            <div class="scroll-hint-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </div>
-            <div class="scroll-hint-text">Scroll Down To Enter The World Of Peregrine Falcon</div>
-        </div>
-        <div class="content">
-            <!-- Your content here -->
-        </div>
+  <div class="zoom-container">
+    <img src="peregrinefalcon.jpeg" alt="Your Image" class="zoom-image">
+    <div class="scroll-hint">
+      <div class="scroll-hint-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="scroll-hint-text">Scroll Down To Enter The World Of Peregrine Falcon</div>
+    </div>
+    <div class="content">
+      <div class="button-container">
+        <button onclick="window.location.href='page2.html';">Visit Page 2</button>
+        <button onclick="window.location.href='page3.html';">Visit Page 3 </button>
+      </div>
+
+      <p class="normal-text">The peregrine falcon (Falco peregrinus), known for its incredible speed...</p>
+
+      <ul class="animated-list">
+        <li>Fastest Animal: The peregrine falcon holds the title...</li>
+      </ul>
+
+      <p class="normal-text">Peregrine falcons are medium-sized birds of prey...</p>
+
+      <ul class="animated-list">
+        <li>During the mid-20th century, peregrine falcon populations...</li>
+      </ul>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar"></div>
+      </div>
+
+      <div id="chat-container" class="chat-history"></div>
+      <div class="user-input-div">
+        <input type="text" placeholder="Chat With Your Bot" id="userprompt" />
+        <button class="btn">Go</button>
+      </div>
     </div>
 
-    <div class="chatbot-container">
-        <div id="chat-container" class="chat-history"></div>
-        <div class="user-input-div">
-            <input type="text" placeholder="Chat With Your Bot" class="user-input" id="userprompt"/>
-            <button class="btn">Go</button>
-        </div>
+    <div class="recaptcha-container">
+      <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+      <button type="submit">Submit</button>
     </div>
 
-    <div class="disqus-container" id="disqus_thread">
-        <!-- Disqus content will be loaded here -->
+    <div class="disqus-container">
+      <div id="disqus_thread"></div>
     </div>
+  </div>
 
-    <script>
-        // Your existing JavaScript code for chat and Disqus
-        const disqusContainer = document.querySelector('.disqus-container');
-        
-        // Show Disqus after scrolling 60% down the page
-        window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const scrollPercent = scrollY / windowHeight;
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'your-page-url'; 
+      this.page.identifier = 'home-page-conservation-of-peregrine-falcon'; 
+    };
 
-            if (scrollPercent >= 0.6) {
-                disqusContainer.classList.add('visible');
-            } else {
-                disqusContainer.classList.remove('visible');
-            }
-        });
-    </script>
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://example.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
 </body>
 </html>
