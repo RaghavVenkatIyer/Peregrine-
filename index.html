@@ -458,7 +458,6 @@ window.addEventListener('scroll', () => {
 
     <div class="recaptcha-container">
       <div class="g-recaptcha" data-sitekey="6LfSrlYqAAAAAKP7M7NlJMtchJUaFcuxnW0zfLgR"></div>
-      <button type="submit">Submit</button>
     </div>
 
     <div id="result"></div>
@@ -483,23 +482,24 @@ window.addEventListener('scroll', () => {
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
   <script id="dsq-count-scr" src="//conservation-of-peregrine-falcon-pesticide.disqus.com/count.js" async></script>
 
-  <script>
-    // Handle button clicks
-    document.addEventListener('click', function(event) {
-      if (event.target.tagName === 'BUTTON') {
-        event.preventDefault();  // Prevent default form submission
 
-        // Get reCAPTCHA response token
-        var recaptchaResponse = grecaptcha.getResponse();
+<script>
+  // Define the callback function for when reCAPTCHA is successfully completed
+  function onRecaptchaSuccess(recaptchaToken) {
+    // 'recaptchaToken' is automatically passed from reCAPTCHA
+    if (recaptchaToken.length === 0) {
+      document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
+    } else {
+      // If reCAPTCHA is completed successfully, handle the response
+      document.getElementById('result').innerText = "reCAPTCHA verification successful!";
+      
+      // If needed, you can send the token to your backend for verification
+      var formData = new FormData();
+      formData.append('recaptchaToken', recaptchaToken);
 
-        if (recaptchaResponse.length === 0) {
-          document.getElementById('result').innerText = "Please complete the reCAPTCHA!";
-        } else {
-          var formData = new FormData();
-          formData.append('recaptchaToken', recaptchaResponse);
-          document.getElementById('result').innerText = "reCAPTCHA verification successful!";
-        }
-      }
+      // You could then submit this formData to your server using fetch or XMLHttpRequest if necessary
+    }
+  }
     });
 
     const zoomImage = document.querySelector('.zoom-image');
