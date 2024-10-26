@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 3</title>
+    <title>Conservation Methods for the Peregrine Falcon</title>
     <style>
+        /* Basic styling */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -20,10 +21,34 @@
             animation: fadeIn 1s ease-in;
         }
 
+        /* Top buttons container */
+        .top-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+
+        .top-buttons a {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #ffab40; /* Orange color */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .top-buttons a:hover {
+            background-color: #ff6f00; /* Darker orange on hover */
+            transform: scale(1.05); /* Slight scale up on hover */
+        }
+
+        /* Content container */
         .content {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
             background-color: #ffffff; /* White background */
             border: 2px solid #00796b; /* Teal border */
             border-radius: 12px;
@@ -31,23 +56,34 @@
             opacity: 0;
             animation: slideIn 1s forwards;
             animation-delay: 0.5s;
+            line-height: 1.6;
         }
 
-        .animation-bar {
-            width: 100%;
-            height: 25px; /* Slightly taller bar */
-            background-color: #ffab40; /* Orange color */
-            animation: loading 4s infinite;
-            border-radius: 15px;
-            margin: 20px 0;
+        /* Method container */
+        .method-container {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
         }
 
-        @keyframes loading {
-            0% { width: 0%; }
-            50% { width: 100%; }
-            100% { width: 0%; }
+        .method-text {
+            flex: 1;
+            padding-right: 20px;
         }
 
+        .method-image {
+            flex: 1;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animation and styling for text */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -57,80 +93,78 @@
             from { transform: translateY(-20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 12px 25px;
-            font-size: 18px;
-            color: white;
-            background-color: #00796b; /* Teal color */
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            margin: 0 10px; /* Space between buttons */
-            animation: bounce 1s infinite alternate;
-        }
-
-        button:hover {
-            background-color: #004d40; /* Darker shade on hover */
-            transform: scale(1.05); /* Scale up on hover */
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-5px); }
-        }
-
-        img {
-            max-width: 100%; /* Responsive images */
-            border-radius: 12px;
-            margin: 20px 0;
-            opacity: 0;
-            animation: fadeIn 2s forwards;
-            animation-delay: 2s; /* Delay for image fade-in */
-        }
-
-        li {
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.5s forwards;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Apply delay to each list item for staggered effect */
-        li:nth-child(1) { animation-delay: 0.6s; }
-        li:nth-child(2) { animation-delay: 0.8s; }
-        li:nth-child(3) { animation-delay: 1s; }
-        li:nth-child(4) { animation-delay: 1.2s; }
-        li:nth-child(5) { animation-delay: 1.4s; }
     </style>
 </head>
 <body>
-    <h1>Welcome to Page 3</h1>
+    <!-- Top buttons -->
+    <div class="top-buttons">
+        <a href="index.html">Home</a>
+        <a href="page2.html">Next Page</a>
+    </div>
+
+    <h1>Peregrine Falcon Conservation Efforts</h1>
     <div class="content">
-        <div class="animation-bar"></div>
-        <p>This page covers various interesting topics:</p>
-        <ul>
-            <li>Understanding biodiversity and its importance.</li>
-            <li>The impact of climate change on wildlife.</li>
-            <li>Conservation efforts around the globe.</li>
-            <li>How humans can contribute to environmental protection.</li>
-            <li>Future trends in wildlife conservation.</li>
-        </ul>
-        <img src="YOUR_IMAGE_URL_HERE.jpg" alt="Wildlife Conservation" />
-        <div class="button-container">
-            <button onclick="index.html';">Back to Main Page</button>
-            <button onclick="page2.html';">Go to Page 2 </button>
+        
+        <!-- Conservation Method 1 -->
+        <div class="method-container">
+            <div class="method-text">
+                <h2>1. Habitat Protection and Restoration</h2>
+                <p>
+                    One of the key conservation strategies for peregrine falcons is to protect and restore their natural habitats.
+                    Ensuring the preservation of cliff ledges, high-rise buildings, and other nesting sites is crucial, as these provide safe spaces for breeding.
+                    Conservationists also work to minimize disturbances in these areas, particularly during the breeding season, to allow for successful reproduction.
+                </p>
+            </div>
+            <div class="method-image">
+                <img src="Habitat.jpg" alt="Habitat Protection for Peregrine Falcons">
+            </div>
         </div>
+
+        <!-- Conservation Method 2 -->
+        <div class="method-container">
+            <div class="method-text">
+                <h2>2. Reducing Pesticide Use</h2>
+                <p>
+                    The use of pesticides, particularly DDT, historically led to population declines due to weakened eggshells.
+                    Conservationists advocate for reduced pesticide use and alternatives to harmful chemicals in agriculture.
+                    By promoting organic farming practices and using integrated pest management, we can reduce toxic exposure and support the recovery of peregrine falcon populations.
+                </p>
+            </div>
+            <div class="method-image">
+                <img src="Pesticides.jpg" alt="Pesticide Reduction">
+            </div>
+        </div>
+
+        <!-- Conservation Method 3 -->
+        <div class="method-container">
+            <div class="method-text">
+                <h2>3. Captive Breeding and Release Programs</h2>
+                <p>
+                    Captive breeding programs have played a significant role in restoring peregrine falcon populations.
+                    By breeding falcons in captivity and releasing them into safe, suitable habitats, we can help increase their numbers and genetic diversity.
+                    This strategy has been particularly successful in regions where falcon populations were once on the brink of extinction.
+                </p>
+            </div>
+            <div class="method-image">
+                <img src="Captive.jpg" alt="Captive Breeding and Release Programs">
+            </div>
+        </div>
+
+        <!-- Conservation Method 4 -->
+        <div class="method-container">
+            <div class="method-text">
+                <h2>4. Public Education and Community Engagement</h2>
+                <p>
+                    Raising public awareness about the importance of peregrine falcon conservation is essential.
+                    Programs aimed at educating local communities, especially those living near falcon habitats, help foster a sense of responsibility for wildlife protection.
+                    Engaging the public through workshops, educational campaigns, and citizen science projects ensures a collective effort in conserving these magnificent birds.
+                </p>
+            </div>
+            <div class="method-image">
+                <img src="Education.jpg" alt="Public Education and Community Engagement">
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
